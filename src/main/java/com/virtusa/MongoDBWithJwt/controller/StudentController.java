@@ -8,18 +8,22 @@ import com.virtusa.MongoDBWithJwt.repository.StudentRepository;
 import com.virtusa.MongoDBWithJwt.service.MyUserDetailsService;
 import com.virtusa.MongoDBWithJwt.service.StudentService;
 import com.virtusa.MongoDBWithJwt.util.JwtUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-
+@Validated
 public class StudentController {
 
     private StudentRepository studentRepository;
@@ -60,23 +64,38 @@ public class StudentController {
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
 
-    @PostMapping("/addStudent")
-    public String saveBook(@RequestBody Student student) {
+   /* @PostMapping("/addStudent")
+    public ResponseEntity<Object> saveStudent(@RequestBody Student student) {
+
         return studentService.AddStudent(student);
+    } */
+    @PostMapping("/addStudent")
+    public ResponseEntity<Object> saveStudent(@RequestBody @Valid Student student) {
+        try {
+            return studentService.AddStudent(student);
+        } catch (IllegalArgumentException e) {
+            String errorMessage = "Invalid request: Student object cannot be null.";
+            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+        }
     }
 
+
+
     @GetMapping("/findAllStudents")
-    public List<Student> getStudents() {
+    public  ResponseEntity getStudents() {
         return studentService.FindStudents();
     }
 
     @PutMapping("/update/{id}")
-    public String editBook(@PathVariable int id, @RequestBody Student student) {
+    public ResponseEntity<Object> editStudnet(@PathVariable int id, @RequestBody Student student) {
         return studentService.UpdateStudent(student);
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteBook(@PathVariable int id) {
+    public ResponseEntity<Object> deleteStudent(@PathVariable int id) {
+
         return studentService.DeleteStudent(id);
     }
+
+
 }

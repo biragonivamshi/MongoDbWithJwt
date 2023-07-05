@@ -3,11 +3,22 @@ package com.virtusa.MongoDBWithJwt.entitity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+    import javax.validation.constraints.NotBlank;
+    import javax.validation.constraints.NotNull;
+    import java.io.Serializable;
+
 @Document(collection= "Student")
-public class Student {
+public class Student implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
+
     private int id;
+    @NotNull
+    @NotBlank
     private String name;
+    @NotNull
+    @NotBlank
     private String village;
 
     public int getId() {

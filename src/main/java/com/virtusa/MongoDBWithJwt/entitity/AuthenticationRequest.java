@@ -1,6 +1,10 @@
 package com.virtusa.MongoDBWithJwt.entitity;
 
-public class AuthenticationRequest {
+import java.io.Serializable;
+
+public class AuthenticationRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String username;
     private String password;
 
